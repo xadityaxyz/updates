@@ -61,7 +61,7 @@ const ContactTab: React.FC = () => {
             asChild
           >
             <a 
-              href="https://drive.google.com/file/d/1LxRITHZIB8twQQbQb5W1YYh626QiZyuN/view?usp=drive_link" 
+              href="https://drive.google.com/file/d/1X_tp630JBIelIn1AbD5PLYL_2YX9RnlA/view?usp=drive_link" 
               target="_blank" 
               rel="noopener noreferrer"
               className="flex items-center gap-2"
