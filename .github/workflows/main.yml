@@ -1,25 +1,31 @@
-name: Checkmarx Scan
+name: Checkmarx One SAST Scan
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - main
+      - master
+      - dev
   pull_request:
 
 jobs:
-  cxone:
+  checkmarx_scan:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Run Checkmarx One Scan
-      uses: Checkmarx/ast-github-action@2.0.23
-      with:
-        base_uri: ${{ secrets.CX_BASE_URI }}
-        cx_tenant: ${{ secrets.CX_TENANT }}
-        cx_client_id: ${{ secrets.CX_CLIENT_ID }}
-        cx_client_secret: ${{ secrets.CX_CLIENT_SECRET }}
-        project_name: "my-cxone-project"
-        branch: ${{ github.ref_name }}
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run Checkmarx One Scan
+        uses: checkmarx/ast-github-action@main
+        with:
+          base_uri: ${{ secrets.CX_BASE_URI }}
+          cx_tenant: ${{ secrets.CX_TENANT }}
+          cx_client_id: ${{ secrets.CX_CLIENT_ID }}
+          cx_client_secret: ${{ secrets.CX_CLIENT_SECRET }}
+          project_name: ${{ github.repository }}
+          branch: ${{ github.ref_name }}
+
+      - name: Upload SARIF to GitHub
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: cx_result.sarif
