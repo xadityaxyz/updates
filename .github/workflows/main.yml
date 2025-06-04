@@ -1,33 +1,30 @@
 name: Checkmarx One Scan
-
+on:
+  push:
+    branches:
+      - main
+      - master
+      - dev
 permissions:
   contents: read
-  pull-requests: write
   security-events: write
-
-on:
-  pull_request:
-
+  actions: read
+  pull-requests: write
+ 
 jobs:
-  scan:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Run Checkmarx One Scan
-        uses: checkmarx/ast-github-action@v2.0.23
+      - name: Checkout
+        uses: actions/checkout@v2
+ 
+      - name: Run Checkmarx One CLI
+        uses: checkmarx/ast-github-action@main
         with:
-          base_uri: ${{ secrets.CX_BASE_URI }}
-          cx_tenant: ${{ secrets.CX_TENANT }}
+          project_name: CxGitHubActionJamna
+          cx_tenant: DP_WP_Account
+          base_uri: https://eu.ast.checkmarx.net/
           cx_client_id: ${{ secrets.CX_CLIENT_ID }}
           cx_client_secret: ${{ secrets.CX_CLIENT_SECRET }}
-          project_name: ${{ github.repository }}
-          branch: ${{ github.ref_name }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          additional_params: --report-format sarif --output-path .
-
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: cx_result.sarif
+          additional_params: --report-format sarif --output-path cx_result.sarif
+          
