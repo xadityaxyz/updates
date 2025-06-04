@@ -1,6 +1,5 @@
 name: Checkmarx One Scan
 
-# Required permissions for the GitHub token
 permissions:
   contents: read
   pull-requests: write
@@ -8,16 +7,12 @@ permissions:
 
 on:
   pull_request:
-    branches:
-      - "**"  # Scans for all branches on PRs
 
 jobs:
-  cxone_scan:
-    name: Checkmarx One Scan
+  scan:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout source code
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Run Checkmarx One Scan
@@ -30,10 +25,9 @@ jobs:
           project_name: ${{ github.repository }}
           branch: ${{ github.ref_name }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          source_dir: .
           additional_params: --report-format sarif --output-path .
 
-      - name: Upload SARIF file to GitHub Security tab
+      - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: cx_result.sarif
