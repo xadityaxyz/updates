@@ -2,8 +2,8 @@ name: Checkmarx One SAST Scan
 
 permissions:
   contents: read
-  security-events: write
   pull-requests: write
+  security-events: write
 
 on:
   push:
@@ -14,12 +14,11 @@ on:
   pull_request:
 
 jobs:
-  scan:
+  checkmarx_scan:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Run Checkmarx One Scan
         uses: checkmarx/ast-github-action@main
